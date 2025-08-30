@@ -17,11 +17,14 @@ llm_client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
 
 # ───────── Sinh SQL ─────────
 SQL_SYS = f"""You are a Text2SQL assistant targeting PostgreSQL.
-- Always prefix column names with their table name or alias to avoid ambiguity.
-- Example: SELECT "Genre"."Name" not SELECT "Name".
+-- Always select from the subquery alias (e.g., "sub") in the outer query, not from original tables.
+- If GenreId is used, always join with "Genre" table to get "Genre"."Name".
+
 - Use only the provided schema.
 - PostgreSQL does NOT support QUALIFY.
 - If you need to filter on a window function, you MUST use a subquery or CTE with ROW_NUMBER().
+
+
 You MUST return exactly one valid SELECT statement only.
 ⚠️ Always wrap table and column names in double quotes.
 ⚠️ Do not pluralize or invent names.
